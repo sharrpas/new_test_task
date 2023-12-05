@@ -18,4 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::post('send-code', [UserController::class, 'requestCode']);
 
 Route::post('login', [UserController::class, 'login']);
+Route::post('sighup', [UserController::class, 'sighup']);
 

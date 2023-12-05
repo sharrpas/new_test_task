@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Constants\Status;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\VerificationCode;
+use Carbon\Carbon;
 use Cryptommer\Smsir\Smsir;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -75,7 +77,8 @@ class UserController extends Controller
     }
     public function sighup(Request $request)
     {
-       /* $validated_data = Validator::make($request->all(), [
+        //اعتبار سنجی درخواست
+        $validated_data = Validator::make($request->all(), [
             'name' => 'required',
             'mobile' => 'unique:App\Models\User,mobile|required|regex:/(09)[0-9]{9}/|size:11',
             'verification_code' => 'required|integer',
@@ -84,6 +87,8 @@ class UserController extends Controller
         if ($validated_data->fails())
             return $this->error(Status::VALIDATION_FAILED, $validated_data->errors()->first());
 
+        //اعتبار سنجی کد تایید
+        //بار دیگری استفاده نشده باشد و چهار دقیقه از ارسالش نگذشته باشد
         if (!$verification_code = VerificationCode::query()
             ->where('code', $request->verification_code)
             ->where('created_at', '>=', Carbon::now()->subMinute(4))
@@ -92,22 +97,31 @@ class UserController extends Controller
             return $this->error(Status::OPERATION_ERROR, 'کد تایید نادرست است');
         }
 
+        //کد تایید مربوط همان شماره تلفن باشد
         if ($verification_code->mobile != $request->mobile) {
             return $this->error(Status::OPERATION_ERROR, 'شماره تلفن وارد شده صحیح نیست');
         }
 
+        //مصرف کردن کد تایید که یک بار دیگر قابل استفادده نباشد
         $verification_code->update([
             'verified_at' => Carbon::now(),
         ]);
 
+        //ساخت یوزر
         $user = User::query()->create([
             'name' => $request->name,
-            'username' => $request->username,
             'mobile' => $request->mobile,
             'password' => Hash::make($request->password),
         ]);
+        //تعین کردن نقش یوزر عادی
         $user->roles()->attach(Role::query()->where('name', 'user')->first()->id);
-*/
 
+        //و در نهایت لاگین کردن یوزر و دادن توکن
+        return $this->success([
+            'user' => $user->name,
+            'mobile' => $user->mobile,
+            'role' => $user->roles()->first()->name,
+            'token' => $user->createToken('token_base_name')->plainTextToken
+        ]);
     }
 }
