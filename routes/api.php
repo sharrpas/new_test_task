@@ -23,6 +23,8 @@ Route::post('signup', [UserController::class, 'sighup']);
 
 Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
     //products
+    Route::get('products',[ProductController::class,'index']);
+    Route::get('product/{product}',[ProductController::class,'show']);
     Route::post('product',[ProductController::class,'store']);
 
 

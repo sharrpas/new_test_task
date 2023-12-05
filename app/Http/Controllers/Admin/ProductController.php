@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Constants\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductCollection;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +14,17 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+
+    public function index()
+    {
+        return $this->success(new ProductCollection(Product::query()->paginate(10)));
+    }
+
+    public function show(Product $product)
+    {
+        return $this->success(ProductResource::make($product));
+    }
+
     public function store(Request $request)
     {
         $validated_data = Validator::make($request->all(), [
