@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             'name' => "Sina",
             'mobile' => '09184185136',
         ],
-            ['password' => bcrypt('123'),]);
+            ['password' => bcrypt('1234'),]);
 
         $role = Role::query()->firstOrCreate([
             'name' => 'admin',
