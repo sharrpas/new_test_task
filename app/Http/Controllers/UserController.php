@@ -19,7 +19,7 @@ class UserController extends Controller
     {
         //اعتبار سنجی درخواست
         $validated_data = Validator::make($request->all(), [
-            'mobile' => 'required',//or mobile number
+            'mobile' => 'required',
             'password' => 'required'
         ]);
         if ($validated_data->fails())

@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,5 +18,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('send-code', [UserController::class, 'requestCode']);
 
 Route::post('login', [UserController::class, 'login']);
-Route::post('sighup', [UserController::class, 'sighup']);
+Route::post('signup', [UserController::class, 'sighup']);
 
+
+Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    //products
+    Route::post('product',[ProductController::class,'store']);
+
+
+});
