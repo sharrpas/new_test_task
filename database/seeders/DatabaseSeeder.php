@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +14,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        //افزودن دیتا های اولیه
+        $user = User::query()->firstOrCreate([
+            'name' => "Sina",
+            'mobile' => '09184185136',
+        ],
+            ['password' => bcrypt('123'),]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $role = Role::query()->firstOrCreate([
+            'name' => 'admin',
+        ]);
+        !$user->hasRole($role->name) ? $user->roles()->attach($role->id) : null;
+
+        Role::query()->firstOrCreate([
+            'name' => 'user',
+        ]);
     }
 }

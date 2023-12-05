@@ -19,7 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'mobile',
         'password',
     ];
 
@@ -39,7 +39,16 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
+    //کنترل نقش های هر کاربر که شامل ادمین و یوزر عادی میشود
+    public function hasRole($role)
+    {
+        return (bool)$this->roles()->where('name', $role)->count();
+    }
 }
