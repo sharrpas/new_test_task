@@ -36,4 +36,6 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     Route::get('product/{product}',[ProductController::class,'show']);
     Route::post('product',[ProductController::class,'store']);
 
+    Route::get('orders',[\App\Http\Controllers\Admin\OrderController::class,'index']);
+
 });
