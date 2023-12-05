@@ -38,6 +38,8 @@ class ProductController extends Controller
             return $this->error(Status::VALIDATION_FAILED, $validated_data->errors());
 
 
+        // ترانس اکشن برای این است که اگر مشکلی هنگام درج اطلاعات رخ داد
+        // داده ها به حالت اولیه برگردند
         DB::beginTransaction();
         try {
             $imageName = date('Ymdhis') . rand(100, 999) . '.' . $request->file('image')->extension();

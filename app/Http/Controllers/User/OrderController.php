@@ -15,7 +15,7 @@ class OrderController extends Controller
     public function store(Product $product)
     {
         $user = auth()->user();
-
+// شناختن یوزر لاگین شده و ثبت سفارش
         $order = $user->orders()->create([
             'order_id' => date('Ymdhis') . rand(1000, 9999),
             'status' => 'recorded',

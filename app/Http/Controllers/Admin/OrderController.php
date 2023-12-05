@@ -11,6 +11,7 @@ class OrderController extends Controller
 {
     public function index()
     {
+        //فرستادن همراه با pagination برای سرعت بیشتر در رکورد های بالا
         return $this->success(new OrderCollection(Order::query()->paginate(10)));
     }
 }
